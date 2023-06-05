@@ -13,22 +13,22 @@ class PostController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Post::query();
+            // $query = Post::query();
             $perPage = 3;
             $page = $request->input('page',1);
             $title = $request->input('title');
             $txt = $request->input('txt');
-            if($title || $txt){
-                $query::whereRaw("title LIKE '%$title%' and txt LIKE '%$txt%'");
-            }
+            $query = Post::where('title','LIKE','%'.$title.'%')->where('txt','LIKE','%'.$txt.'%');
             $count = $query->count();
+            $lastPage = ceil($count/$perPage);
+            $page>$lastPage?$page=$lastPage:'';
             $result = $query->offset(($page-1)*$perPage)->limit($perPage)->get();
 
             return response()->json([
                 'status'=>200,
                 'message'=>'Posts found',
                 'current_page'=>$page,
-                'last_page'=>ceil($count/$perPage),
+                'last_page'=>$lastPage,
                 'data'=>$result
             ]);
         } catch (Exception $e){
@@ -86,7 +86,7 @@ class PostController extends Controller
         }
     }
 
-    public function delete(Request $request, Post $post)
+    public function delete(Post $post)
     {
         try {
             $post->delete();
