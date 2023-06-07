@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\RegisterUserRequest;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
-    public function register(RegisterUserRequest $request)
+    public function create(RegisterUserRequest $request)
     {
         try {
             $user = new User();
@@ -19,7 +19,7 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->save();
 
-            $user->sendEmailVerificationNotification();
+            // $user->sendEmailVerificationNotification();
             
             return response()->json([
                 'status'=>201,
@@ -31,21 +31,28 @@ class UserController extends Controller
         }
     }
 
-    public function login(Request $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-            $user = Auth::user(); 
-            $success['token'] =  $user->createToken('MyApp')->plainTextToken; 
+            $user = Auth::user();
+            $success['token'] =  $user->createToken(env('DB_SALT'))->plainTextToken; 
             $success['name'] =  $user->name;
-            return $this->sendResponse($success, 'User login successfully.');
+            return response()->json([
+                'status'=>200,
+                'message'=>'User login successfully',
+                'user'=>$user
+            ]);
         } 
         else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+            return response()->json([
+                'status'=>401,
+                'message'=>'Login failed'
+            ]);
         } 
 
     }
 
-    public function delete(User $user)
+    public function destroy(User $user)
     {
         try {
             $user->delete();

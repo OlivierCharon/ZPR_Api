@@ -14,7 +14,7 @@ class PostController extends Controller
     {
         try {
             // $query = Post::query();
-            $perPage = 3;
+            $perPage = $request->input('perPage',3);
             $page = $request->input('page',1);
             $title = $request->input('title');
             $txt = $request->input('txt');
@@ -36,7 +36,7 @@ class PostController extends Controller
         }
     }
     
-    public function get(Post $post)
+    public function show(Post $post)
     {
         try {
             return response()->json([
@@ -86,7 +86,7 @@ class PostController extends Controller
         }
     }
 
-    public function delete(Post $post)
+    public function destroy(Post $post)
     {
         try {
             $post->delete();
