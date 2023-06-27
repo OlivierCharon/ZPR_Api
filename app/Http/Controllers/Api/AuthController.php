@@ -17,52 +17,59 @@ class AuthController extends Controller
             $user->name = $request->name;
             $user->password = $request->password;
             $user->email = $request->email;
+            $user->img = $request->img;
             $user->save();
 
             // $user->sendEmailVerificationNotification();
-            
+
             return response()->json([
-                'status'=>201,
-                'message'=>'User registered',
-                'data'=>$user
+                'status' => 201,
+                'message' => 'User registered',
+                'data' => $user
             ]);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             return response()->json($e);
         }
     }
 
     public function store(Request $request): JsonResponse
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            $success['token'] =  $user->createToken(env('DB_SALT'))->plainTextToken; 
+            $success['token'] =  $user->createToken(env('DB_SALT'))->plainTextToken;
             $success['name'] =  $user->name;
             return response()->json([
-                'status'=>200,
-                'message'=>'User login successfully',
-                'user'=>$user
+                'status' => 200,
+                'message' => 'User login successfully',
+                'user' => $user
             ]);
-        } 
-        else{ 
+        } else {
             return response()->json([
-                'status'=>401,
-                'message'=>'Login failed'
+                'status' => 401,
+                'message' => 'Login failed'
             ]);
-        } 
-
+        }
     }
 
-    public function destroy(User $user)
+    public function destroy(User $user, Request $request)
     {
         try {
+            // dd($user);
             $user->delete();
+            if (!$user) {
+                dd('pas de user');
+                $query = Post::where([
+                    ['lower(name)', 'LIKE', '%' . strtolower($request->name) . '%'],
+                    ['lower(email)', 'LIKE', '%' . strtolower($request->email) . '%']
+                ])->get();
+                dd($query);
+            }
 
             return response()->json([
-                'status'=>200,
-                'message'=>'User deleted'
+                'status' => 200,
+                'message' => 'User deleted'
             ]);
-            
-        } catch (Exception $e){
+        } catch (Exception $e) {
             return response()->json($e);
         }
     }

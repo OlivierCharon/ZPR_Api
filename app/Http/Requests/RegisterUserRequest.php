@@ -24,8 +24,8 @@ class RegisterUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required|string|unique:users,name',
-            'password'=>[
+            'name' => 'required|string|unique:users,name',
+            'password' => [
                 'required',
                 'string',
                 'min:6',                // must be at least 6 characters in length
@@ -34,30 +34,33 @@ class RegisterUserRequest extends FormRequest
                 'regex:/[0-9]/',        // must contain at least one digit
                 'regex:/[@$!%*#?&]/',   // must contain a special character
             ],
-            'email'=>'required|unique:users,email|email',
+            'email' => 'required|unique:users,email|email',
+            'img' => 'nullable|string'
         ];
     }
 
-    public function failedValidation(Validator $validator){
+    public function failedValidation(Validator $validator)
+    {
         throw new HttpResponseException(response()->json([
-            'success'=>false,
-            'status'=>422,
-            'message'=>'User validation error',
-            'errorList'=>$validator->errors()
+            'success' => false,
+            'status' => 422,
+            'message' => 'User validation error',
+            'errorList' => $validator->errors()
         ]));
     }
 
     public function messages()
     {
         return [
-            'name.required'=>'Username needed',
-            'name.unique'=>'Username already used',
-            'password.required'=>'Password needed',
-            'password.min'=>'Password has to be at least 6 characters long',
-            'password.regex'=>'Password needs at least: an uppercase letter, a lowercase letter, one digit, a special character',
-            'email.required'=>'Email needed',
-            'email.email'=>'Email format incorrect',
-            'email.unique'=>'Email already used',
+            'name.required' => 'Username needed',
+            'name.unique' => 'Username already used',
+            'password.required' => 'Password needed',
+            'password.min' => 'Password has to be at least 6 characters long',
+            'password.regex' => 'Password needs at least: an uppercase letter, a lowercase letter, one digit, a special character',
+            'email.required' => 'Email needed',
+            'email.email' => 'Email format incorrect',
+            'email.unique' => 'Email already used',
+            'img.string' => 'Image path has to be a string'
         ];
     }
 }
