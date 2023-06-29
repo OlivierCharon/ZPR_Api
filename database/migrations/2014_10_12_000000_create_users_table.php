@@ -13,14 +13,24 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('email')->unique();
+            $table->string('name');
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('img')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->string('name_unique')
+                ->virtualAs("CONCAT(name,'#',IF(deleted_at IS NULL, '-', deleted_at))")
+                ->invisible()
+                ->unique();
+
+            $table->string('email_unique')
+                ->virtualAs("CONCAT(email,'#',IF(deleted_at IS NULL, '-', deleted_at))")
+                ->invisible()
+                ->unique();
         });
     }
 

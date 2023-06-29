@@ -55,6 +55,7 @@ class PostController extends Controller
     {
         try {
             $post = new Post();
+            $post->user_id = auth()->user()->id;
             $post->title = $request->title;
             $post->img = $request->img;
             $post->txt = $request->txt;

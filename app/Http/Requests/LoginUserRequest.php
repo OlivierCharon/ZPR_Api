@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UserOrEmail;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class LoginUserRequest extends FormRequest
 {
@@ -23,8 +25,12 @@ class LoginUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required|string|unique:users,name',
-            'password'=>[
+            'login' => [
+                'required',
+                'string',
+                new UserOrEmail
+            ],
+            'password' => [
                 'required',
                 'string',
                 'min:6',                // must be at least 6 characters in length
@@ -32,31 +38,30 @@ class LoginUserRequest extends FormRequest
                 'regex:/[A-Z]/',        // must contain at least one uppercase letter
                 'regex:/[0-9]/',        // must contain at least one digit
                 'regex:/[@$!%*#?&]/',   // must contain a special character
-            ],
-            'email'=>'required|unique:users,email|email',
+            ]
         ];
     }
 
-    public function failedValidation(Validator $validator){
+    public function failedValidation(Validator $validator)
+    {
         throw new HttpResponseException(response()->json([
-            'success'=>false,
-            'status'=>422,
-            'message'=>'User validation error',
-            'errorList'=>$validator->errors()
+            'success' => false,
+            'status' => 401,
+            'message' => 'User validation error',
+            'errorList' => $validator->errors()
         ]));
     }
 
     public function messages()
     {
         return [
-            'name.required'=>'Username needed',
-            'name.unique'=>'Username already used',
-            'password.required'=>'Password needed',
-            'password.min'=>'Password has to be at least 6 characters long',
-            'password.regex'=>'Password needs at least: an uppercase letter, a lowercase letter, one digit, a special character',
-            'email.required'=>'Email needed',
-            'email.email'=>'Email format incorrect',
-            'email.unique'=>'Email already used',
+            'login.required' => 'Username or email address needed',
+            'login.string'  => 'Wrong login or password',
+            'login.exists'  => 'Wrong login or passwordaaa',
+            'password.required' => 'Password needed',
+            'password.string'  => 'Wrong login or password',
+            'password.min'  => 'Wrong login or password',
+            'password.regex' => 'Wrong login or password',
         ];
     }
 }
