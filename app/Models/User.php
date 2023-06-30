@@ -22,7 +22,18 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'img'
+        'img',
+        'is_admin'
+    ];
+
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'is_admin' => false,
     ];
 
     /**
@@ -45,5 +56,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'deleted_at' => 'datetime',
         'password' => 'hashed',
+        'is_admin' => 'boolean'
     ];
 }

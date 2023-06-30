@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class RegisterUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class RegisterUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:users,name,NULL,id,deleted_at,NULL',
+            'name' => 'string|unique:users,name,NULL,id,deleted_at,NULL',
             'password' => [
-                'required',
                 'string',
                 'min:6',                // must be at least 6 characters in length
                 'regex:/[a-z]/',        // must contain at least one lowercase letter
@@ -34,9 +33,9 @@ class RegisterUserRequest extends FormRequest
                 'regex:/[0-9]/',        // must contain at least one digit
                 'regex:/[@$!%*#?&]/',   // must contain a special character
             ],
-            'email' => 'required|unique:users,email,NULL,id,deleted_at,NULL|email',
-            'img' => 'nullable|string',
-            'isAdmin' => 'nullable|boolean'
+            'email' => 'unique:users,email,NULL,id,deleted_at,NULL|email',
+            'img' => 'string',
+            'isAdmin' => 'boolean'
         ];
     }
 
@@ -53,9 +52,7 @@ class RegisterUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Username needed',
             'name.unique' => 'Username already used',
-            'password.required' => 'Password needed',
             'password.min' => 'Password has to be at least 6 characters long',
             'password.regex' => 'Password needs at least: an uppercase letter, a lowercase letter, one digit, a special character',
             'email.required' => 'Email needed',
