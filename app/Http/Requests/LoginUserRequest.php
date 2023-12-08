@@ -23,7 +23,8 @@ class LoginUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required|string|unique:users,name',
+            // 'name'=>'required|string|unique:users,name',
+            'email'=>'required|unique:users,email|email',
             'password'=>[
                 'required',
                 'string',
@@ -33,7 +34,6 @@ class LoginUserRequest extends FormRequest
                 'regex:/[0-9]/',        // must contain at least one digit
                 'regex:/[@$!%*#?&]/',   // must contain a special character
             ],
-            'email'=>'required|unique:users,email|email',
         ];
     }
 
@@ -41,7 +41,7 @@ class LoginUserRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success'=>false,
             'status'=>422,
-            'message'=>'User validation error',
+            'message'=>'Login failed',
             'errorList'=>$validator->errors()
         ]));
     }
@@ -49,14 +49,14 @@ class LoginUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'=>'Username needed',
-            'name.unique'=>'Username already used',
+            // 'name.required'=>'Username needed',
+            // 'name.unique'=>'Username already used',
+            'email.required'=>'Email needed',
+            'email.email'=>'Email format incorrect',
+            // 'email.unique'=>'Email already used',
             'password.required'=>'Password needed',
             'password.min'=>'Password has to be at least 6 characters long',
             'password.regex'=>'Password needs at least: an uppercase letter, a lowercase letter, one digit, a special character',
-            'email.required'=>'Email needed',
-            'email.email'=>'Email format incorrect',
-            'email.unique'=>'Email already used',
         ];
     }
 }

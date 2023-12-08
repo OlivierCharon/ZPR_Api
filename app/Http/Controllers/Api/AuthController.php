@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginUserRequest;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\RegisterUserRequest;
 
@@ -23,6 +24,7 @@ class AuthController extends Controller
             // $user->sendEmailVerificationNotification();
 
             return response()->json([
+                'success' => true,
                 'status' => 201,
                 'message' => 'User registered',
                 'data' => $user
@@ -32,9 +34,11 @@ class AuthController extends Controller
         }
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(LoginUserRequest $request): JsonResponse
     {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $credentials = $request->validated();
+
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $success['token'] =  $user->createToken(env('DB_SALT'))->plainTextToken;
             $success['name'] =  $user->name;

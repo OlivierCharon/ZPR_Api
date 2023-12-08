@@ -27,7 +27,7 @@ Route::delete('post/delete/{post}', [PostController::class, 'destroy']);
 Route::post('register', [AuthController::class, 'create']);
 Route::get('users', [AuthController::class, 'index']);
 Route::get('user/{user}', [AuthController::class, 'show']);
-Route::get('login', [AuthController::class, 'store']);
+Route::post('login', [AuthController::class, 'store']);
 Route::put('user/edit/{user}', [AuthController::class, 'update']);
 Route::delete('user/delete/{user}', [AuthController::class, 'destroy']);
 Route::put('user/disable/{user}', [AuthController::class, 'disable']);
