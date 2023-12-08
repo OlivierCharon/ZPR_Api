@@ -24,7 +24,7 @@ class RegisterUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:users,name',
+            'name' => 'required|string|unique:users,name,NULL,id,deleted_at,NULL',
             'password' => [
                 'required',
                 'string',
@@ -34,8 +34,9 @@ class RegisterUserRequest extends FormRequest
                 'regex:/[0-9]/',        // must contain at least one digit
                 'regex:/[@$!%*#?&]/',   // must contain a special character
             ],
-            'email' => 'required|unique:users,email|email',
-            'img' => 'nullable|string'
+            'email' => 'required|unique:users,email,NULL,id,deleted_at,NULL|email',
+            'img' => 'nullable|string',
+            'isAdmin' => 'nullable|boolean'
         ];
     }
 
@@ -44,7 +45,7 @@ class RegisterUserRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'status' => 422,
-            'message' => 'User validation error',
+            'message' => 'User registration error',
             'errorList' => $validator->errors()
         ]));
     }

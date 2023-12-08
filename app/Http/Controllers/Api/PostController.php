@@ -53,52 +53,74 @@ class PostController extends Controller
 
     public function store(CreatePostRequest $request)
     {
-        try {
-            $post = new Post();
-            $post->title = $request->title;
-            $post->img = $request->img;
-            $post->txt = $request->txt;
-            $post->save();
+        if (auth()->user()->is_admin) {
+            try {
+                $post = new Post();
+                $post->user_id = auth()->user()->id;
+                $post->title = $request->title;
+                $post->img = $request->img;
+                $post->txt = $request->txt;
+                $post->save();
 
-            return response()->json([
-                'status' => 201,
-                'message' => 'Post created',
-                'data' => $post
-            ]);
-        } catch (Exception $e) {
-            return response()->json($e);
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'Post created',
+                    'data' => $post
+                ]);
+            } catch (Exception $e) {
+                return response()->json($e);
+            }
         }
+        return response()->json([
+            'status' => 500,
+            'message' => 'You have no right to create post'
+        ]);
     }
 
     public function update(EditPostRequest $request, Post $post)
     {
-        try {
-            $post->title = $request->title;
-            $post->img = $request->img;
-            $post->txt = $request->txt;
-            $post->save();
+        if ($post->user_id === auth()->user()->id || auth()->user()->is_admin) {
+            try {
+                $post->title = $request->title;
+                $post->img = $request->img;
+                $post->txt = $request->txt;
+                $post->updated_by = auth()->user()->id;
+                $post->save();
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Post updated',
-                'data' => $post
-            ]);
-        } catch (Exception $e) {
-            return response()->json($e);
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Post updated',
+                    'data' => $post
+                ]);
+            } catch (Exception $e) {
+                return response()->json($e);
+            }
         }
+        return response()->json([
+            'status' => 500,
+            'message' => 'You have no right to edit this post'
+        ]);
     }
 
     public function destroy(Post $post)
     {
-        try {
-            $post->delete();
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Post deleted'
-            ]);
-        } catch (Exception $e) {
-            return response()->json($e);
+        if ($post->user_id === auth()->user()->id || auth()->user()->is_admin) {
+            try {
+                $post->updated_by = auth()->user()->id;
+                $post->delete();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Post deleted'
+                ]);
+            } catch (Exception $e) {
+                return response()->json($e);
+            }
         }
+        return response()->json([
+            'status' => 500,
+            'message' => 'You have no right to delete this post'
+        ]);
     }
 }
