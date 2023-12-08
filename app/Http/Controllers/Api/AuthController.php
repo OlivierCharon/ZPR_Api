@@ -7,15 +7,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginUserRequest;
-use Illuminate\Auth\Events\Registered;
-use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 
 class AuthController extends Controller
 {
     public function create(RegisterUserRequest $request)
     {
-        if (auth()->user()->is_admin) {
+        // if (auth()->user()->is_admin) {
             try {
                 $user = new User();
                 $user->name = $request->name;
@@ -27,23 +25,23 @@ class AuthController extends Controller
 
                 // $user->sendEmailVerificationNotification();
 
+                return response()->json([
+                    'success' => true,
+                    'status' => 201,
+                    'message' => 'User registered',
+                    'data' => $user
+                ]);
+            } catch (Exception $e) {
+                return response()->json($e);
+            }
             return response()->json([
-                'success' => true,
-                'status' => 201,
-                'message' => 'User registered',
-                'data' => $user
+                'status' => 500,
+                'message' => 'You have no right to create users'
             ]);
-        } catch (Exception $e) {
-            return response()->json($e);
-        }
-        return response()->json([
-            'status' => 500,
-            'message' => 'You have no right to create users'
-        ]);
+        // }
     }
 
     public function store(LoginUserRequest $request): JsonResponse
-    public function store(LoginUserRequest $request)
     {
         if (Auth::attempt(['email' => $request->login, 'password' => $request->password]) || Auth::attempt(['name' => $request->login, 'password' => $request->password])) {
             $user = Auth::user();
