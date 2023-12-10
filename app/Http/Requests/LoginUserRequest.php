@@ -26,11 +26,14 @@ class LoginUserRequest extends FormRequest
     {
         return [
             // 'name'=>'required|string|unique:users,name',
-            'email'=>'required|unique:users,email|email',
-            'password'=>[
+            'login'=>[
                 'required',
                 'string',
                 new UserOrEmail
+            ],
+            'password'=>[
+                'required',
+                'string',
             ],
             'password' => [
                 'required',
@@ -57,14 +60,8 @@ class LoginUserRequest extends FormRequest
     public function messages()
     {
         return [
-            // 'name.required'=>'Username needed',
-            // 'name.unique'=>'Username already used',
-            'email.required'=>'Email needed',
-            'email.email'=>'Email format incorrect',
-            // 'email.unique'=>'Email already used',
+            'login.required'=>'Login needed',
             'password.required'=>'Password needed',
-            'password.min'=>'Password has to be at least 6 characters long',
-            'password.regex'=>'Password needs at least: an uppercase letter, a lowercase letter, one digit, a special character',
         ];
     }
 }

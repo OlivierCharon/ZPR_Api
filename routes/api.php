@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,18 +22,17 @@ Route::get('posts', [PostController::class, 'index']);
 Route::get('post/{post}', [PostController::class, 'show']);
 
 // USER
-Route::post('register', [AuthController::class, 'create']);
-Route::post('login', [AuthController::class, 'store']);
-Route::get('users', [AuthController::class, 'index']);
-Route::get('user/{user}', [AuthController::class, 'show']);
+Route::post('register', [AuthController::class, 'create']); // SIGNIN
+Route::post('login', [AuthController::class, 'store']); // LOGIN
+Route::delete('logout', [AuthController::class, 'destroy']); // LOGOUT
+Route::delete('delete', [AuthController::class, 'remove']); // DELETE ACCOUNT
+Route::get('users', [AuthController::class, 'index']); // GET ALL USERS
+Route::get('user/{user}', [AuthController::class, 'show']); // GET ONE USER
+Route::get('/user', [AuthController::class, 'current']); // GET CURRENT CONNECTED USER
 
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    // GET CURRENT CONNECTED USER
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
 
     // POSTS - CUD
     Route::post('post/create', [PostController::class, 'store']);
