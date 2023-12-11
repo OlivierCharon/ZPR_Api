@@ -33,7 +33,13 @@ class AuthController extends Controller
                     'success' => true,
                     'status' => 201,
                     'message' => 'User registered',
-                    'data' => $user
+                    'user' => [
+                        'id'=> $user->id,
+                        'email'=> $user->email,
+                        'name'=> $user->name,
+                        'img'=> $user->img,
+                        'is_admin'=> $user->is_admin,
+                    ]
                 ]);
             } catch (Exception $e) {
                 return response()->json($e);
@@ -57,7 +63,13 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => 200,
                     'message' => 'User logged successfully',
-                    'user' => $user,
+                    'user' => [
+                        'id'=> $user->id,
+                        'email'=> $user->email,
+                        'name'=> $user->name,
+                        'img'=> $user->img,
+                        'is_admin'=> $user->is_admin,
+                    ]
                     // 'token' => $token
                 ]);
             }
@@ -158,6 +170,8 @@ class AuthController extends Controller
                         'id' => Auth::user()->id,
                         'email' => Auth::user()->email,
                         'name' => Auth::user()->name,
+                        'img' => Auth::user()->img,
+                        'is_admin' => Auth::user()->is_admin,
                     ]);
                 else
                     return false;
