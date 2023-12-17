@@ -20,20 +20,19 @@ use Illuminate\Support\Facades\Auth;
 // POST
 Route::get('posts', [PostController::class, 'index']);
 Route::get('post/{post}', [PostController::class, 'show']);
-
-// USER
-Route::post('register', [AuthController::class, 'create']); // SIGNIN
-Route::post('login', [AuthController::class, 'store']); // LOGIN
-Route::delete('logout', [AuthController::class, 'destroy']); // LOGOUT
-Route::delete('delete', [AuthController::class, 'remove']); // DELETE ACCOUNT
-Route::get('users', [AuthController::class, 'index']); // GET ALL USERS
-Route::get('user/{user}', [AuthController::class, 'show']); // GET ONE USER
-Route::get('/user', [AuthController::class, 'current']); // GET CURRENT CONNECTED USER
+Route::group(['middleware' => ['web']], function () {
+    // USER
+    Route::post('register', [AuthController::class, 'create']); // SIGNIN
+    Route::post('login', [AuthController::class, 'store']); // LOGIN
+    Route::delete('logout', [AuthController::class, 'destroy']); // LOGOUT
+    Route::delete('delete', [AuthController::class, 'remove']); // DELETE ACCOUNT
+    Route::get('users', [AuthController::class, 'index']); // GET ALL USERS
+    Route::get('user/{user}', [AuthController::class, 'show']); // GET ONE USER
+    Route::get('/user', [AuthController::class, 'current']); // GET CURRENT CONNECTED USER
+});
 
 
 Route::middleware('auth:sanctum')->group(function () {
-
-
     // POSTS - CUD
     Route::post('post/create', [PostController::class, 'store']);
     Route::put('post/edit/{post}', [PostController::class, 'update']);

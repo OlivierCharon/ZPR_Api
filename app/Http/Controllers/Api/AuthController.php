@@ -100,7 +100,7 @@ class AuthController extends Controller
                     return response()->json([
                         'status' => 201,
                         'message' => 'User registered',
-                        'data' => $user
+                        'user' => $user
                     ]);
                 } catch (Exception $e) {
                     return response()->json($e);
@@ -123,7 +123,7 @@ class AuthController extends Controller
                     return response()->json([
                         'status' => 200,
                         'message' => $request->enable === true ? 'User enabled' : 'User disabled',
-                        'data' => $user
+                        'user' => $user
                     ]);
                 } catch (Exception $e) {
                     return response()->json($e);
@@ -167,11 +167,13 @@ class AuthController extends Controller
             {
                 if(Auth::user())
                     return response()->json([
-                        'id' => Auth::user()->id,
-                        'email' => Auth::user()->email,
-                        'name' => Auth::user()->name,
-                        'img' => Auth::user()->img,
-                        'is_admin' => Auth::user()->is_admin,
+                        'user'=>[
+                            'id' => Auth::user()->id,
+                            'email' => Auth::user()->email,
+                            'name' => Auth::user()->name,
+                            'img' => Auth::user()->img,
+                            'is_admin' => Auth::user()->is_admin,
+                        ]
                     ]);
                 else
                     return false;
