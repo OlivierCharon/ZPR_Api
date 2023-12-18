@@ -20,9 +20,7 @@ use Illuminate\Support\Facades\Auth;
 // POST
 Route::get('posts', [PostController::class, 'index']);
 Route::get('post/{post}', [PostController::class, 'show']);
-
-
-Route::middleware('web')->group(function () {
+Route::group(['middleware' => ['web']], function () {
     // USER
     Route::post('register', [AuthController::class, 'create']); // SIGNIN
     Route::post('login', [AuthController::class, 'store']); // LOGIN

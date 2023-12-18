@@ -38,11 +38,11 @@ class LoginUserRequest extends FormRequest
             'password' => [
                 'required',
                 'string',
-                'min:6',                // must be at least 6 characters in length
-                'regex:/[a-z]/',        // must contain at least one lowercase letter
-                'regex:/[A-Z]/',        // must contain at least one uppercase letter
-                'regex:/[0-9]/',        // must contain at least one digit
-                'regex:/[@$!%*#?&]/',   // must contain a special character
+                // 'min:6',                // must be at least 6 characters in length
+                // 'regex:/[a-z]/',        // must contain at least one lowercase letter
+                // 'regex:/[A-Z]/',        // must contain at least one uppercase letter
+                // 'regex:/[0-9]/',        // must contain at least one digit
+                // 'regex:/[@$!%*#?&]/',   // must contain a special character
             ],
         ];
     }
@@ -61,7 +61,9 @@ class LoginUserRequest extends FormRequest
     {
         return [
             'login.required'=>'Login needed',
+            'login.string'=>'Login needed',
             'password.required'=>'Password needed',
+            'password.string'=>'Password needed',
         ];
     }
 }

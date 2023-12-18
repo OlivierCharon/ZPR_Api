@@ -53,8 +53,8 @@ class RegisterUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Username needed',
-            'name.unique' => 'Username already used',
+            'name.required' => 'Name needed',
+            'name.unique' => 'Name already used',
             'password.required' => 'Password needed',
             'password.min' => 'Password has to be at least 6 characters long',
             'password.regex' => 'Password needs at least: an uppercase letter, a lowercase letter, one digit, a special character',
