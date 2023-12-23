@@ -17,9 +17,6 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-// POST
-Route::get('posts', [PostController::class, 'index']);
-Route::get('post/{post}', [PostController::class, 'show']);
 Route::group(['middleware' => ['web']], function () {
     // USER
     Route::post('register', [AuthController::class, 'create']); // SIGNIN
@@ -29,6 +26,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('users', [AuthController::class, 'index']); // GET ALL USERS
     Route::get('user/{user}', [AuthController::class, 'show']); // GET ONE USER
     Route::get('/user', [AuthController::class, 'current']); // GET CURRENT CONNECTED USER
+    // POST
+    Route::get('posts', [PostController::class, 'index']);
+    Route::get('post/{post}', [PostController::class, 'show']);
 });
 
 
